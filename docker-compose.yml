@@ -16,7 +16,7 @@ services:
     - .env
     labels:
     - "traefik.backend=ginnungagap"
-    - "traefik.frontend.rule=Host:ginnungagap.anne.flab.dk"
+    - "traefik.frontend.rule=Host:monitor.discworld.dk,*.monitor.discworld.dk"
 
   # Define an InfluxDB service
   influxdb:
