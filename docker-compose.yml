@@ -1,9 +1,9 @@
-version: '2'
+version: '3'
 
 services:
 
   nginx:
-    image: nginx:1.15
+    image: nginx:1.19
     environment:
       VIRTUAL_HOST: influxdb.ginnungagap.docker,chronograf.ginnungagap.docker
     volumes:
@@ -15,23 +15,25 @@ services:
     env_file:
     - .env
     labels:
-    - "traefik.backend=ginnungagap"
-    - "traefik.frontend.rule=Host:monitor.discworld.dk,*.monitor.discworld.dk"
+    - "traefik.backend=monitor-discworld"
+    - "traefik.frontend.rule=Host:chronograf.monitor.discworld.dk,influxdb.monitor.discworld.dk"
+    restart: unless-stopped
 
   # Define an InfluxDB service
   influxdb:
-    image: influxdb:1.7
+    image: influxdb:1.8
     volumes:
     - ./Docker/Configuration/etc/influxdb.conf:/etc/influxdb/influxdb.conf:ro
     - ./Docker/Data/influxdb:/var/lib/influxdb
     env_file:
     - .env
     labels:
-    - "traefik.enable=false"
+    - "traefik.enable=false
+    restart: unless-stopped"
 
   # Define a Chronograf service
   chronograf:
-    image: chronograf:1.7
+    image: chronograf:1.8
     environment:
       INFLUXDB_URL: http://influxdb:8086
 #      KAPACITOR_URL: http://kapacitor:9092
@@ -42,7 +44,7 @@ services:
 #    - kapacitor
     labels:
     - "traefik.enable=false"
-
+    restart: unless-stopped
 
 
 #  # Define a Telegraf service
